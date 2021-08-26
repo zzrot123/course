@@ -1,16 +1,11 @@
 package com.example.course.week3.orm.demo4;
 
-import com.example.course.week3.orm.demo3.MyClazz;
-import com.example.course.week3.orm.demo3.StuClass;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.*;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Properties;
@@ -21,7 +16,7 @@ public class MyJPADemo {
         final PGSimpleDataSource dataSource = new PGSimpleDataSource();
 //        dataSource.setDatabaseName("OrmDemo");
         dataSource.setUser("postgres");
-        dataSource.setPassword("");
+        dataSource.setPassword("password");
         dataSource.setUrl("jdbc:postgresql://localhost:5432/university");
         return dataSource;
     }
@@ -37,7 +32,7 @@ public class MyJPADemo {
     private EntityManagerFactory entityManagerFactory(DataSource dataSource, Properties hibernateProperties ){
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan( "demo1" );
+        em.setPackagesToScan( "com/example/course/week3/orm/demo4" );
         em.setJpaVendorAdapter( new HibernateJpaVendorAdapter() );
         em.setJpaProperties( hibernateProperties );
         em.setPersistenceUnitName( "demo-unit" );
@@ -56,13 +51,12 @@ public class MyJPADemo {
 
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-        //N + 1 => entitygraph, criteria, left join fetch
-        Student student = em.find(Student.class, "1");
-        List<Teacher_Student> list = student.getTeacher_students();
-        for(Teacher_Student ts: list) {
-            String id = ts.getId();
-        }
-//        MyClazz c = em.find(MyClazz.class, "2");
+        Student s = em.find(Student.class, "1");
+        Teacher t = em.find(Teacher.class, "1");
+        Teacher_Student ts = new Teacher_Student();
+        ts.setTeacher(t);
+        t.setTeacher_students(ts);
+        em.merge(t);
 //        System.out.println("**************************************");
 //        System.out.println("class is loaded : " + unitUtil.isLoaded(c));
 //        System.out.println("collection is loaded : " + unitUtil.isLoaded(c, "stuClasses"));
@@ -72,11 +66,5 @@ public class MyJPADemo {
 //        System.out.println("collection is loaded : " + unitUtil.isLoaded(c, "stuClasses"));
 //        System.out.println("**************************************");
         tx.commit();
-    }
-
-    private static MyClazz createClass(String name) {
-        MyClazz c =  new MyClazz();
-        c.setName(name);
-        return c;
     }
 }
