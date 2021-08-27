@@ -23,4 +23,11 @@ public class Teacher_Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "t_id")
     private Teacher teacher;
+
+    @Override
+    public String toString() {
+        return "Teacher_Student{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

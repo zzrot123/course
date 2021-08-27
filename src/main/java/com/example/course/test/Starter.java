@@ -13,6 +13,5 @@ public class Starter {
         InvocationHandler invocationHandler = new JdkDynamicProxy(teacherAspect, target);
         TeacherService proxy = (TeacherService) Proxy.newProxyInstance(Starter.class.getClassLoader(), new Class[]{TeacherService.class}, invocationHandler);
         proxy.print();
-        System.out.println();
     }
 }

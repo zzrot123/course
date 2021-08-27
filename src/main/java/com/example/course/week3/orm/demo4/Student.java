@@ -31,4 +31,12 @@ public class Student {
     public void setTeacher_students(Teacher_Student ts) {
         this.teacher_students.add(ts);
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

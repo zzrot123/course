@@ -22,7 +22,7 @@ public class Teacher {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "stu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Teacher_Student> teacher_students = new ArrayList<>();
 
     public List<Teacher_Student> getTeacher_students() {
@@ -31,5 +31,13 @@ public class Teacher {
 
     public void setTeacher_students(Teacher_Student teacher_students) {
         this.teacher_students.add(teacher_students);
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

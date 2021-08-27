@@ -14,10 +14,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+//generating teacher proxy
 public class JdkDynamicProxy implements InvocationHandler {
 
-    private Object aspect;
-    private Object target;
+    private Object aspect; //teacher aspect
+    private Object target; //teacher target
 
     public JdkDynamicProxy(Object aspect, Object target) {
         this.aspect = aspect;
@@ -53,18 +54,5 @@ public class JdkDynamicProxy implements InvocationHandler {
             }
         }
         return list;
-    }
-
-    public static boolean isEqualsMethod(Method method) {
-        if (method != null && method.getName().equals("equals")) {
-            Class<?>[] paramTypes = method.getParameterTypes();
-            return paramTypes.length == 1 && paramTypes[0] == Object.class;
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean isHashCodeMethod(Method method) {
-        return method != null && method.getName().equals("hashCode") && method.getParameterCount() == 0;
     }
 }

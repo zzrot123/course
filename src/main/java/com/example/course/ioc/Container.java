@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  Dependency injection => IOC (IOC container)
+ *  why IOC ?
+ * @Component -> mark bean -> container
+ * @Autowired -> inject bean
+ */
 public class Container {
     private final Map<String, Object> objectFactory = new HashMap<>();
 
@@ -26,7 +32,7 @@ public class Container {
         for(Class<?> clazz: classes) {
             Annotation[] annotations = clazz.getAnnotations();
             for(Annotation a: annotations) {
-                if(a.annotationType() == MyService.class) {
+                if(a.annotationType() == Component.class) {
                     objectFactory.put(clazz.getSimpleName(), clazz.getDeclaredConstructor(null).newInstance());
                 }
             }
@@ -41,7 +47,7 @@ public class Container {
             for(Field f: fields) {
                 Annotation[] annotations = f.getAnnotations();
                 for(Annotation a: annotations) {
-                    if(a.annotationType() == Inject.class) {
+                    if(a.annotationType() == Autowired.class) {
                         Class<?> type = f.getType();
                         Object injectInstance = objectFactory.get(type.getSimpleName());
                         f.setAccessible(true);
@@ -55,7 +61,7 @@ public class Container {
 }
 
 
-@MyService
+@Component
 class StudentRegisterService {
     @Override
     public String toString() {
@@ -63,9 +69,9 @@ class StudentRegisterService {
     }
 }
 
-@MyService
+@Component
 class StudentApplication {
-    @Inject
+    @Autowired
     StudentRegisterService studentRegisterService;
 
     @Override
@@ -76,13 +82,33 @@ class StudentApplication {
     }
 }
 
-@MyService
+@Component
 class Starter {
-    @Inject
+    @Autowired
     private static StudentApplication studentApplication;
+    @Autowired
+    private static StudentRegisterService studentRegisterService;
 
     public static void main(String[] args) throws Exception{
         Container.start();
         System.out.println(studentApplication);
+        System.out.println(studentRegisterService);
     }
 }
+/**
+ *  1. add interface
+ *  2. all components need to impl interface
+ *  3. @Autowired -> inject by type
+ *                   if we have multiple implementations of current type => throw exception
+ *  4. @Autowired + @Qualifier("name") -> inject by bean name
+ *  5. provide constructor injection
+ *      @Autowired
+ *      public xx(.. ,..) {
+ *          .. = ..
+ *          .. = ..
+ *      }
+ *  6. provide setter injection
+ *  7. provide different injection scope / bean scope
+ *          1. now we only supporting singleton
+ *          2. prototype -> @Autowired => you inject a new instance
+ */

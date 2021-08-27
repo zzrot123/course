@@ -32,7 +32,7 @@ public class MyJPADemo {
     private EntityManagerFactory entityManagerFactory(DataSource dataSource, Properties hibernateProperties ){
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan( "com/example/course/week3/orm/demo4" );
+        em.setPackagesToScan( "com/example/course/week3/orm/demo4");
         em.setJpaVendorAdapter( new HibernateJpaVendorAdapter() );
         em.setJpaProperties( hibernateProperties );
         em.setPersistenceUnitName( "demo-unit" );
@@ -51,20 +51,25 @@ public class MyJPADemo {
 
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-        Student s = em.find(Student.class, "1");
-        Teacher t = em.find(Teacher.class, "1");
-        Teacher_Student ts = new Teacher_Student();
-        ts.setTeacher(t);
-        t.setTeacher_students(ts);
-        em.merge(t);
-//        System.out.println("**************************************");
-//        System.out.println("class is loaded : " + unitUtil.isLoaded(c));
-//        System.out.println("collection is loaded : " + unitUtil.isLoaded(c, "stuClasses"));
-//        List<StuClass> stuClassList = c.getStuClasses();
-//        System.out.println("collection is loaded : " + unitUtil.isLoaded(c, "stuClasses"));
-//        System.out.println(stuClassList);
-//        System.out.println("collection is loaded : " + unitUtil.isLoaded(c, "stuClasses"));
-//        System.out.println("**************************************");
+//        Teacher t = em.find(Teacher.class, "1");
+//        Student s = em.find(Student.class, "2");
+//        Teacher_Student ts = new Teacher_Student();
+//        ts.setStu(s);
+//        List<Teacher_Student> list = t.getTeacher_students();
+//        list.remove(0);
+//        List<Teacher> teachers = em.createQuery("select t from Teacher t").getResultList();
+//        System.out.println(teachers);
+        List<Teacher> tList = em.createQuery("select t from Teacher t join t.teacher_students ts").getResultList();
+        Teacher t = tList.get(0);
+        System.out.println("**************************************");
+        System.out.println("class is loaded : " + unitUtil.isLoaded(t));
+        System.out.println("collection is loaded : " + unitUtil.isLoaded(t, "teacher_students"));
+        em.detach(t);
+        List<Teacher_Student> teacher_students = t.getTeacher_students();
+        System.out.println("collection is loaded : " + unitUtil.isLoaded(teacher_students, "teacher_students"));
+        System.out.println(teacher_students);
+        System.out.println("collection is loaded : " + unitUtil.isLoaded(teacher_students, "teacher_students"));
+        System.out.println("**************************************");
         tx.commit();
     }
 }
