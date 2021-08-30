@@ -129,7 +129,25 @@ public class ProxyMethodInvocation implements MethodInvocation {
  *               14. return Val1
  *    15. return Val1
  *
- *
+ *    1. MethodInvocation::this  proceed()
+ *          2.BeforeInterceptor
+ *               3.beforeAdvice()
+ *               4. return MethodInvocation::this proceed()
+ *                     5. AroundInterceptor
+ *                            6. return AroundAdviceInterceptor::invoke(MethodInvocation::this, (Method)customizedAround(JoinPoint mi), aspectInstance)
+ *                                      7. Method(logic: customizedAround(JoinPoint mi)).invoke(aspectInstance, args(include MethodInvocation::this))
+ *                                              8. aspectInstance.customizedAround(MethodInvocation::this)
+ *                                                  9. before logic
+ *                                                     Obj Val = MethodInvocation::this proceed();
+ *                                                          10.  MethodInvocation::this proceed();
+ *                                                                  call real target
+ *                                                          11.  return Val
+ *                                                     after logic
+ *                                                  9. return val
+ *                                              ..
+ *                           6.  return val;
+ *                     5.  return val;
+ *              4. return val;
  *
  *    hm AOP
  *      option1 : build AOP from scratch

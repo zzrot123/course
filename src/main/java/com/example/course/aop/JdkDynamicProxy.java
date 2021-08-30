@@ -2,7 +2,9 @@ package com.example.course.aop;
 
 import com.example.course.aop.advice.AspectBeforeAfterAdvice;
 import com.example.course.aop.advice.BeforeAfterAdvice;
+import com.example.course.aop.advice.interceptor.AroundAdvice;
 import com.example.course.aop.annotation.After;
+import com.example.course.aop.annotation.Around;
 import com.example.course.aop.annotation.Before;
 import com.example.course.aop.advice.interceptor.AfterAdviceInterceptor;
 import com.example.course.aop.advice.interceptor.BeforeAdviceInterceptor;
@@ -33,10 +35,10 @@ public class JdkDynamicProxy implements InvocationHandler {
     }
 
     private List<MethodInterceptor> getInterceptor(Object aspectObj) {
-        Class<?> clazz = aspect.getClass();
-        if(clazz == null) {
-            return null;
+        if(aspectObj == null) {
+            return new ArrayList<>();
         }
+        Class<?> clazz = aspectObj.getClass();
         Method[] methods = clazz.getDeclaredMethods();
         List<MethodInterceptor> list = new ArrayList<>();
         for(Method mi: methods) {
@@ -50,6 +52,9 @@ public class JdkDynamicProxy implements InvocationHandler {
                     BeforeAfterAdvice after = new AspectBeforeAfterAdvice(mi, aspectObj);
                     MethodInterceptor methodInterceptor = new AfterAdviceInterceptor(after);
                     list.add(methodInterceptor);
+                } else if(an.annotationType() == Around.class) {
+                    AroundAdvice around = new AroundAdvice(mi, aspectObj);
+                    list.add(around);
                 }
             }
         }
