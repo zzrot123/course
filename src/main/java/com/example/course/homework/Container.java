@@ -3,6 +3,7 @@ package com.example.course.homework;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +56,8 @@ public class Container {
     private boolean injectObjects(List<Class<?>> classes) throws Exception{
         for(Class<?> clazz: classes) {
             Field[] fields = clazz.getDeclaredFields();
-//            System.out.println("The length of field is: "+fields.length);
-//            System.out.println("The class is "+clazz.getSimpleName()+"\n");
-//            System.out.println(objectFactory.get(clazz.getSimpleName()));
             Object curInstance = objectFactory.get(clazz.getSimpleName());
             for(Field f: fields) {
-                //System.out.println("The field is: "+f+"\n");
                 Annotation[] annotations = f.getAnnotations();
                 //System.out.println("the length of annotations is: "+annotations.length+"\n");
                 // check for CustomQualifier
@@ -75,18 +72,26 @@ public class Container {
                     throw new IllegalArgumentException("multiple implementations of current type is not allowed");
                 }
                 for(Annotation a: annotations) {
-                    //System.out.println(".....");
                     //System.out.println(a.getClass().getSimpleName());
                     if(a.annotationType() == Autowired.class) {
                         // check if it is constructor or setter function or regular assignment
                         Class<?> type = f.getType();
-                        //System.out.println(type.getSimpleName());
                         Object injectInstance = objectFactory.get(type.getSimpleName());
                         f.setAccessible(true);
                         f.set(curInstance, injectInstance);
                     }
                 }
             }
+            // setter injection
+            Method[] methods = clazz.getDeclaredMethods();
+            for(Method m : methods){
+                Annotation[] annotations = m.getAnnotations();
+                for(Annotation a: annotations) {
+                    m.setAccessible(true);
+                    m.invoke(curInstance,5);
+                }
+            }
+
             //System.out.println(objectFactory.get(clazz.getSimpleName()));
         }
         return true;
@@ -95,6 +100,7 @@ public class Container {
 
 // 1. add interface
 interface StudentServices{
+    int getX();
 }
 interface StudentApplications{
 }
@@ -104,6 +110,21 @@ interface ApplicationRunner{
 // 2. all components impl interface
 @Component
 class StudentRegisterServiceImpl1 implements StudentServices {
+
+    // 6. setter injection
+    static int x = 3;
+
+    @Autowired
+    void SetX(int x){
+        this.x = x;
+    }
+
+    @Override
+    public int getX(){
+        return x;
+    }
+
+
     @Override
     public String toString() {
         return "this is student register service instance 1 : " + super.toString() + "\n";
@@ -116,6 +137,12 @@ class StudentRegisterServiceImpl2 implements StudentServices {
     public String toString() {
         return "this is student register service instance 2 : " + super.toString() + "\n";
     }
+
+    @Override
+    public int getX(){
+        return -1;
+    }
+
 }
 
 @Component
@@ -144,6 +171,7 @@ class StarterImpl implements ApplicationRunner {
 
     @Autowired
     StarterImpl(StudentApplications StudentApplicationImpl, StudentServices StudentRegisterServiceImpl1){
+        // hardcode name for
         StarterImpl.studentApplicationImpl = StudentApplicationImpl;
         StarterImpl.studentRegisterServiceImpl1 = StudentRegisterServiceImpl1;
     }
@@ -158,6 +186,8 @@ class StarterImpl implements ApplicationRunner {
         //System.out.println(StarterImpl);
         System.out.println(StarterImpl.studentApplicationImpl);
         System.out.println(StarterImpl.studentRegisterServiceImpl1);
+        // check if setter injection works
+        System.out.println(studentRegisterServiceImpl1.getX());
     }
 }
 
