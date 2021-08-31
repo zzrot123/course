@@ -61,24 +61,26 @@ public class Container {
                 Annotation[] annotations = f.getAnnotations();
                 //System.out.println("the length of annotations is: "+annotations.length+"\n");
                 // check for CustomQualifier
-                if(f.isAnnotationPresent(CustomQualifier.class)){
-                    Class<?> type = f.getType();
-                    Object injectInstance = objectFactory.get(f.getAnnotation(CustomQualifier.class).name());
-                    f.setAccessible(true);
-                    f.set(curInstance, injectInstance);
-                    continue;
-                }else if(annotations.length>=2){
-                    // multiple implementation of the type, throw exception
-                    throw new IllegalArgumentException("multiple implementations of current type is not allowed");
-                }
+
                 for(Annotation a: annotations) {
                     //System.out.println(a.getClass().getSimpleName());
                     if(a.annotationType() == Autowired.class) {
-                        // check if it is constructor or setter function or regular assignment
-                        Class<?> type = f.getType();
-                        Object injectInstance = objectFactory.get(type.getSimpleName());
-                        f.setAccessible(true);
-                        f.set(curInstance, injectInstance);
+                        if(f.isAnnotationPresent(CustomQualifier.class)){
+                            Class<?> type = f.getType();
+                            Object injectInstance = objectFactory.get(f.getAnnotation(CustomQualifier.class).name());
+                            f.setAccessible(true);
+                            f.set(curInstance, injectInstance);
+                            continue;
+                        }else if(annotations.length>=2){
+                            // multiple implementation of the type, throw exception
+                            throw new IllegalArgumentException("multiple implementations of current type is not allowed");
+                        }else{
+                            Class<?> type = f.getType();
+                            Object injectInstance = objectFactory.get(type.getSimpleName());
+                            f.setAccessible(true);
+                            f.set(curInstance, injectInstance);
+                        }
+
                     }
                 }
             }
