@@ -23,14 +23,29 @@ public class Container {
         return Arrays.asList(StudentRegisterServiceImpl1.class,StudentRegisterServiceImpl2.class, StudentApplicationImpl.class, StarterImpl.class);
     }
 
+    // should i do constructor injection inside register or in injectObjects?
     private boolean register(List<Class<?>> classes) throws Exception {
         for(Class<?> clazz: classes) {
             Annotation[] annotations = clazz.getAnnotations();
             for(Annotation a: annotations) {
                 if(a.annotationType() == Component.class) {
-//                    System.out.println(clazz.getSimpleName());
-                    objectFactory.put(clazz.getSimpleName(), clazz.getDeclaredConstructor(null).newInstance());
-//                    System.out.println(objectFactory.get(clazz.getSimpleName()));
+                    //System.out.println(clazz.getSimpleName());
+                    if(clazz.getSimpleName().equals("StarterImpl")){
+                        // init starterimpl with constructor
+//                        System.out.println(clazz.getDeclaredConstructors()[0].getParameters()[0].getName());
+//                        System.out.println(clazz.getDeclaredConstructors()[0].getParameters()[1].getName());
+                        objectFactory.put(clazz.getSimpleName(),clazz.getDeclaredConstructors()[0].newInstance(
+                                objectFactory.get(clazz.getDeclaredConstructors()[0].getParameters()[0].getName()),
+                                objectFactory.get(clazz.getDeclaredConstructors()[0].getParameters()[1].getName())
+                        ));
+//                        System.out.println(objectFactory.get(clazz.getDeclaredConstructors()[0].getParameters()[0].getName()));
+//                        System.out.println(objectFactory.get(clazz.getDeclaredConstructors()[0].getParameters()[1].getName()));
+//
+//                        System.out.println(objectFactory);
+                    }else {
+                        objectFactory.put(clazz.getSimpleName(), clazz.getDeclaredConstructor(null).newInstance());
+                    }
+                    //System.out.println(objectFactory.get(clazz.getSimpleName()));
                 }
             }
         }
@@ -40,11 +55,14 @@ public class Container {
     private boolean injectObjects(List<Class<?>> classes) throws Exception{
         for(Class<?> clazz: classes) {
             Field[] fields = clazz.getDeclaredFields();
-            //System.out.println(clazz.getSimpleName());
+//            System.out.println("The length of field is: "+fields.length);
+//            System.out.println("The class is "+clazz.getSimpleName()+"\n");
+//            System.out.println(objectFactory.get(clazz.getSimpleName()));
             Object curInstance = objectFactory.get(clazz.getSimpleName());
             for(Field f: fields) {
+                //System.out.println("The field is: "+f+"\n");
                 Annotation[] annotations = f.getAnnotations();
-                System.out.println(annotations.length);
+                //System.out.println("the length of annotations is: "+annotations.length+"\n");
                 // check for CustomQualifier
                 if(f.isAnnotationPresent(CustomQualifier.class)){
                     Class<?> type = f.getType();
@@ -57,59 +75,25 @@ public class Container {
                     throw new IllegalArgumentException("multiple implementations of current type is not allowed");
                 }
                 for(Annotation a: annotations) {
+                    //System.out.println(".....");
+                    //System.out.println(a.getClass().getSimpleName());
                     if(a.annotationType() == Autowired.class) {
                         // check if it is constructor or setter function or regular assignment
                         Class<?> type = f.getType();
+                        //System.out.println(type.getSimpleName());
                         Object injectInstance = objectFactory.get(type.getSimpleName());
                         f.setAccessible(true);
                         f.set(curInstance, injectInstance);
-
                     }
                 }
-
             }
+            //System.out.println(objectFactory.get(clazz.getSimpleName()));
         }
         return true;
     }
 }
 
-//
-//@Component
-//class StudentRegisterService {
-//    @Override
-//    public String toString() {
-//        return "this is student register service instance : " + super.toString() + "\n";
-//    }
-//}
-//
-//@Component
-//class StudentApplication {
-//    @Autowired
-//    StudentRegisterService studentRegisterService;
-//
-//    @Override
-//    public String toString() {
-//        return "StudentApplication{\n" +
-//                "studentRegisterService=" + studentRegisterService +
-//                "}\n";
-//    }
-//}
-//
-//@Component
-//class Starter {
-//    @Autowired
-//    private static StudentApplication studentApplication;
-//    @Autowired
-//    private static StudentRegisterService studentRegisterService;
-//
-//    public static void main(String[] args) throws Exception{
-//        Container.start();
-//        System.out.println(studentApplication);
-//        System.out.println(studentRegisterService);
-//    }
-//}
-
-// add interface
+// 1. add interface
 interface StudentServices{
 }
 interface StudentApplications{
@@ -117,7 +101,7 @@ interface StudentApplications{
 interface ApplicationRunner{
 }
 
-// all components impl interface
+// 2. all components impl interface
 @Component
 class StudentRegisterServiceImpl1 implements StudentServices {
     @Override
@@ -151,23 +135,29 @@ class StudentApplicationImpl implements StudentApplications {
 
 @Component
 class StarterImpl implements ApplicationRunner {
-    @Autowired
-    private static StudentApplicationImpl studentApplicationImpl;
-    @Autowired
-    private static StudentRegisterServiceImpl1 studentRegisterServiceImpl1;
-//    private static StudentApplications studentApplicationImpl;
-//    private static StudentServices studentRegisterServiceImpl;
-
 //    @Autowired
-//    StarterImpl(StudentApplications studentApplicationImpl, StudentServices studentRegisterServiceImpl){
-//        this.studentApplicationImpl = studentApplicationImpl;
-//        this.studentRegisterServiceImpl = studentRegisterServiceImpl;
-//    }
+//    private static StudentApplicationImpl studentApplicationImpl;
+//    @Autowired
+//    private static StudentRegisterServiceImpl1 studentRegisterServiceImpl1;
+    private static StudentApplications studentApplicationImpl;
+    private static StudentServices studentRegisterServiceImpl1;
+
+    @Autowired
+    StarterImpl(StudentApplications StudentApplicationImpl, StudentServices StudentRegisterServiceImpl1){
+        StarterImpl.studentApplicationImpl = StudentApplicationImpl;
+        StarterImpl.studentRegisterServiceImpl1 = StudentRegisterServiceImpl1;
+    }
+
+    @Override
+    public String toString() {
+        return "this is StarterImpl instance : " + super.toString() + "\n";
+    }
 
     public static void main(String[] args) throws Exception{
         Container.start();
-        System.out.println(studentApplicationImpl);
-        System.out.println(studentRegisterServiceImpl1);
+        //System.out.println(StarterImpl);
+        System.out.println(StarterImpl.studentApplicationImpl);
+        System.out.println(StarterImpl.studentRegisterServiceImpl1);
     }
 }
 
