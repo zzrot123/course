@@ -7,16 +7,20 @@ import com.example.course.aop.annotation.Before;
 
 public class TeacherAspect {
     @Before
-    @After
     public void m1() throws Throwable {
-        System.out.println("before + after");
+        System.out.println("before");
+    }
+
+    @After
+    public void m2() throws Throwable {
+        System.out.println("after");
     }
 
     @Around
-    public void m2(MethodInvocation mi) throws Throwable {
-        System.out.println("1");
+    public void m3(MethodInvocation mi) throws Throwable {
+        System.out.println("around before logic");
         mi.proceed();
-        System.out.println("2");
+        System.out.println("around after logic");
     }
 }
 

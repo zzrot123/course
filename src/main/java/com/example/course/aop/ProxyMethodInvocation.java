@@ -115,7 +115,7 @@ public class ProxyMethodInvocation implements MethodInvocation {
  *
  *    1. MethodInvocation::this  proceed()
  *          2.BeforeInterceptor
- *               3.beforeAdvice()
+ *               3.beforeAdvice() : @Before logic in TeacherAspect
  *               4. return MethodInvocation::this proceed()
  *                     5.AfterInterceptor
  *                         6.result = run MethodInvocation::this proceed()
@@ -124,7 +124,7 @@ public class ProxyMethodInvocation implements MethodInvocation {
  *                                                          9. call real function and return Val1
  *                                          10. afterReturnAdvice(Val1)
  *                                          11. return Val1
- *                        12. afterAdvice()
+ *                        12. afterAdvice(): @After logic in TeacherAspect
  *                        13. return Val1
  *               14. return Val1
  *    15. return Val1
@@ -192,4 +192,24 @@ public class ProxyMethodInvocation implements MethodInvocation {
  *         rest api coding (white board)
  *         technical questions
  *
+ *
+ *
+ * @Autowired
+ * ..
+ *
+ * 1. bean type
+ *      > 1 implementation
+ *    bean name
+ *      ..
+ *
+ * 1. reference name / qualifier
+ *       inject bean
+ *    bean type
+ *       exception
+ *
+ *
+ *  AOP : reflective method invocation
+ *        AspectJ..
+ *        BeforeAdviceInterceptor
+ *        ... Interceptor
  */
