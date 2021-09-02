@@ -46,6 +46,24 @@ public class Day16 {
  *             generate response back to you
  *          -> send response to client public ip:port
  *
+ *
+ *
+ *          layer 7: http content
+ *              -> layer 6 : encrypt http content (SSL)
+ *                  -> layer 5 : socket wrap info and try to send request
+ *                      -> layer 4 : socket choose TCP as connection protocol and add port / tcp info in package
+ *                          -> layer 3 : put IP info in package (source IP Address(exchanges mac address with private ip from DHCP, router will re-write it later ???) + destination IP Address from DNS)
+ *                              -> layer 2 : add network card / mac address (my mac address + router mac address) within ethernet network (private environment), send request from private to public
+ *                                  -> layer 1 : cable (public environment)
+ *                                          ....
+ *                                  -> layer 1 : cable (public environment)
+ *                              -> layer 2 : find server location in ethernet network (private environment)
+ *                          -> layer 3 : parse IP info (IP Address)
+ *                      -> layer 4 : parse TCP info (SYN / ACK / SEQ)
+ *                 -> layer 5 : socket : parse input stream verify tcp header (data or close or build connection)
+ *             -> layer 6 : decrypt / key exchange (SSL)
+ *         layer 7 : decoding http content
+ *
  * ------------------------------------------------------------------------------------------------------
  *          Session vs Cookie
  *
@@ -88,7 +106,7 @@ public class Day16 {
  *              endpoint / uri / url => /noun
  *                 students
  *                 get all students
- *                      endpoint: /students
+ *                      endpoint: /students?age>10
  *                      http method: get
  *                      status code: 200 / 500
  *                      response body :

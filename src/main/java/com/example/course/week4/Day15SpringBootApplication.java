@@ -35,73 +35,73 @@ import org.springframework.stereotype.Component;
  *      3. embedded tomcat
  *      4. package spring boot -> jar
  */
-@SpringBootApplication
-public class Day15SpringBootApplication {
-
-    private static StudentService ss1;
-    private static StudentService ss2;
-    @Autowired
-    public Day15SpringBootApplication(
-            @Qualifier("stuServiceImpl1") StudentService ss1,
-            @Qualifier("stuServiceImpl1") StudentService ss2
-    ) {
-        Day15SpringBootApplication.ss1 = ss1;
-        Day15SpringBootApplication.ss2 = ss2;
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Day15SpringBootApplication.class, args);
-        /*
-            1. this is impl1
-            2. this is impl2
-            3. multiple implementation exception
-            4. null pointer exception
-         */
-        //ss1.print();
-
-        /*
-              print impl1
-         */
+//@SpringBootApplication
+//public class Day15SpringBootApplication {
+//
+//    private static StudentService ss1;
+//    private static StudentService ss2;
+//    @Autowired
+//    public Day15SpringBootApplication(
+//            @Qualifier("stuServiceImpl1") StudentService ss1,
+//            @Qualifier("stuServiceImpl1") StudentService ss2
+//    ) {
+//        Day15SpringBootApplication.ss1 = ss1;
+//        Day15SpringBootApplication.ss2 = ss2;
+//    }
+//
+//    public static void main(String[] args) {
+//        SpringApplication.run(Day15SpringBootApplication.class, args);
+//        /*
+//            1. this is impl1
+//            2. this is impl2
+//            3. multiple implementation exception
+//            4. null pointer exception
+//         */
+//        //ss1.print();
+//
+//        /*
+//              print impl1
+//         */
+////        ss1.print();
+//        System.out.println(ss1);
 //        ss1.print();
-        System.out.println(ss1);
-        ss1.print();
-    }
-}
-
-@Component
-interface StudentService {
-    void print();
-}
-@Component
-@Scope("prototype")
-//stuServiceImpl1
-class StuServiceImpl1 implements StudentService{
-    @Override
-    public void print() {
-        System.out.println("this is impl1 ");
-    }
-}
-@Component
-//stuServiceImpl2
-class StuServiceImpl2 implements StudentService{
-    @Override
-    public void print() {
-        System.out.println("this is impl2 ");
-    }
-}
-
-@Aspect
-@Component
-class StuServiceAspect {
-    @Around(value = "myPointCutting()")
-    public void logging(ProceedingJoinPoint mi) throws Throwable {
-        System.out.println("this is pre logging from aspect");
-        mi.proceed();
-        System.out.println("this is after logging from aspect");
-    }
-
-    @Pointcut(value = "within(com.example.course.week4..*)")
-    public void myPointCutting(){
-
-    }
-}
+//    }
+//}
+//
+//@Component
+//interface StudentService {
+//    void print();
+//}
+//@Component
+//@Scope("prototype")
+////stuServiceImpl1
+//class StuServiceImpl1 implements StudentService{
+//    @Override
+//    public void print() {
+//        System.out.println("this is impl1 ");
+//    }
+//}
+//@Component
+////stuServiceImpl2
+//class StuServiceImpl2 implements StudentService{
+//    @Override
+//    public void print() {
+//        System.out.println("this is impl2 ");
+//    }
+//}
+//
+//@Aspect
+//@Component
+//class StuServiceAspect {
+//    @Around(value = "myPointCutting()")
+//    public void logging(ProceedingJoinPoint mi) throws Throwable {
+//        System.out.println("this is pre logging from aspect");
+//        mi.proceed();
+//        System.out.println("this is after logging from aspect");
+//    }
+//
+//    @Pointcut(value = "within(com.example.course.week4..*)")
+//    public void myPointCutting(){
+//
+//    }
+//}
