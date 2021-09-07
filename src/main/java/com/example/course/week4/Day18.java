@@ -82,6 +82,7 @@ public class Day18 {
  *
  *   build spring boot application
  *      1. call 3rd party weather api , and get result , display in your response
+ *          https://www.metaweather.com/api/
  *         use RestTemplate to send request to 3rd party and get response
  *      2. call multiple 3rd party weather apis at same time
  *         use thread pool
