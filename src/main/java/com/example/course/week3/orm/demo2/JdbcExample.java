@@ -3,7 +3,8 @@ package com.example.course.week3.orm.demo2;
 import java.sql.*;
 
 /**
- *     DB - server(ip + port)(netty, tomcat, nodejs, jboss, weblogic...) - client
+ *
+ *  (*) DB - server(ip + port)(netty, tomcat, nodejs, jboss, weblogic...) - client
  *     blocking io server
  *     1. build connection based on request ip / port
  *     2. thread pool => assign thread

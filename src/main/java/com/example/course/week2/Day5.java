@@ -57,7 +57,7 @@ public class Day5 {
  *          Thread pool class ?     -> OOP
  *          Thread is avaliable ?   -> current alive threads ?
  *
- *          1. worker Thread (extends Thread, wrap thread reference)
+ *      (*) 1. worker Thread (extends Thread, wrap thread reference)
  *              for(;;) / while(true)
  *          2. blocking queue hold messages
  *              delayedWorkQueue -> scheduledThreadPool
@@ -65,7 +65,7 @@ public class Day5 {
  *              core pool size = max pool size => fix thread pool
  *              core pool size != max pool size => cached thread pool (1, Integer.MAX_VALUE)
  *
- *              task execution time = waiting time + service time
+ *         (*)  task execution time = waiting time + service time
  *              (?)task -> 90% 80% service time -> Cpu core number + 1
  *              (?)task -> mainly IO based  ->   1 / (service / task execution time)
  *                                       ->   1 / (service / (service + waiting))
@@ -84,7 +84,7 @@ public class Day5 {
  *                              T1 [][][]
  *              [][][][][][]    T2 [][][]
  *                              T3 [][][]
- *              4. forkjoin pool(fork() / join())
+ *              4. fork join pool(fork() / join())
  *                  Stealing algorithm
  *
  *         thread pool usage
@@ -105,13 +105,14 @@ public class Day5 {
  *
  */
 /**
+ * (*)
  *  S -> Single Responsebility
  *  O -> open close
  *  LID
  *
  *  Future.get() -> blocking function
  *
- *  (?)spring webflux(netty) -> event loop
+ *  (*)spring webflux(netty) -> event loop
  */
 class ThreadPoolConfiguration{
     private static final ExecutorService pool = Executors.newFixedThreadPool(5);

@@ -57,6 +57,7 @@ public class Day18 {
  *      click picture -> endpoint
  *          www.bank.com/transfer/from=your account&to=their account
  *
+ *   (*)
  *   Authentication
  *   1) filter
  *   2) UsernamePasswordAuthenticationFilter

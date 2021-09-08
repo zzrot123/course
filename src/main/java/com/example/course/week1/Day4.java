@@ -77,7 +77,7 @@ class Test {
  *            thread safe
  *
  *
- *      create my lock:
+ *      (*)create my lock:
  *      flag = true : has lock
  *      flag = false : no threads holding lock
  *
@@ -196,7 +196,7 @@ class Test {
  *   when producer offer(E) into queue successfully -> producer notify consumer (queue is not empty)
  *
  *
- *   class MyBlockingQueue<T> {
+ *   (*)class MyBlockingQueue<T> {
  *       private final Object[] queue;
  *       private int size = 0;
  *       private int start = 0, end = 0;

@@ -318,3 +318,16 @@ class TestDay6{
 
     }
 }
+
+
+/**
+ *      database
+ *      1. basic query
+ *      2. transaction (no MVCC)
+ *      3. lock (exclusive / share / optimistic / pessimistic)
+ *      4. index
+ *      5. tune query
+ *      6. normalization + table design
+ *      7. CAP theory
+ *      8. mongodb cluster(why mongodb CP) / cassandra(why cassandra AP)
+ */
