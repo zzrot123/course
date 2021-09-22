@@ -264,4 +264,56 @@ public class Day1 {
  *
  *
  * 1:30 CDT,  3:30 / 4:30
+ *
+ *
+ *
+ *
+ * immutable
+ *
  */
+
+final class ImmutableStudent {
+    private final String name;
+
+    public ImmutableStudent(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+//java pass by value / reference
+//List<String> list = ..
+//new ImmutableStudentList(list);
+//list.remove(0);
+final class ImmutableStudentList1 {
+    private final List<String> name;
+
+    public ImmutableStudentList1(List<String> name) {
+        this.name = new ArrayList<>(name);
+    }
+
+    public List<String> getName() {
+        return new ArrayList<>(name);
+    }
+}
+
+//example 3
+class Teacher {
+}
+
+final class ImmutableStudentList2 {
+    private final List<Teacher> name;
+
+    public ImmutableStudentList2(List<Teacher> name) {
+        //deep copy
+        this.name = name;
+    }
+
+    public List<Teacher> getName() {
+        //deep copy
+        return name;
+    }
+}

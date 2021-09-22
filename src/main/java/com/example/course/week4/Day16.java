@@ -8,7 +8,7 @@ public class Day16 {
  *      chrome(client) -> www.google.com -> request -> server1
  *
  *
- *      chrome(client)
+ *   (*  )chrome(client)
  *          -> www.google.com
  *          -> network card(mac address)
  *          -> use mac address to exchange private ip from Wifi
