@@ -21,7 +21,8 @@ public class Day3 {
  *          after java 8
  *          remove perm -> metaspace (native heap)(full)
  *    STW -> stop the world pause
- *    GC
+ *
+ *    GC(*)
  *          GC roots : Threads / classloader....
  *          minor GC : parallelNewGC, parallelGC
  *          major GC :  ConcurrentMarkSweep :
@@ -51,7 +52,7 @@ public class Day3 {
  *        https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html
  *        java memory model
  *
- *   (?)Strong Reference / Soft Reference / Weak Reference / Phantom Reference
+ *   (*)Strong Reference / Soft Reference / Weak Reference / Phantom Reference
  *   String a = new Object(); -> strong reference
  *
  *   SoftReference : objects will be removed when heap is full
@@ -111,8 +112,8 @@ class Main {
  *  volatile
  *      1. prevent reordering from JVM optimizer
  *      2. visibility -> when we change value -> value will be written back to main memory
- *      3. happen-before rule((?)barrier / mfence(storeload))
- *              (?)read write   read write write write
+ *      3. happen-before rule((*)barrier / mfence(storeload))
+ *              (*)read write   read write write write
  *  Timeline ->
  *
  *  CPU1            CPU2
@@ -254,7 +255,7 @@ class SyncTest {
 }
 
 /**
- *   (?)in x86 processor(Strong memory model)
+ *   (*)in x86 processor(Strong memory model)
  *      read1 write1 read1 write(volatile) storeLoad(mfence / lock prefix => will trigger cache flush => to main memory)  .read
  *
  *   monitorenter(flush local cache -> memory)

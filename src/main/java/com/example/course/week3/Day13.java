@@ -20,6 +20,19 @@ public class Day13 {
 
 /**
  *  design pattern
+ *      singleton
+ *      builder
+ *      factory
+ *      dynamic proxy / static proxy
+ *      template
+ *
+ *      observer
+ *      strategy
+ *      bridge
+ *      prototype
+ *      adapter
+ *      decorator
+ *
  *
  *      1. Singleton
  *          eager loading
